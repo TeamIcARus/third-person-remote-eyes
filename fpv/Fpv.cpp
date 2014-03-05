@@ -5,6 +5,7 @@ Content     :   First-person view test application for Oculus Rift
 Created     :   October 4, 2012
 Authors     :   Michael Antonov, Andrew Reisse, Steve LaValle
 				Peter Hoff, Dan Goodman, Bryan Croteau
+Modified    :   Anton Lindgren
 
 Copyright   :   Copyright 2012 Oculus VR, Inc. All Rights reserved.
 
@@ -656,6 +657,7 @@ void OculusWorldDemoApp::GrabFrame() {
 	}
 
 	lastFrame = cvQueryFrame( capture );
+    cvFlip(lastFrame, NULL, 1);
 
 	if ( !lastFrame ) {
 		fprintf( stderr, "ERROR: frame is null...\n" );
@@ -710,7 +712,9 @@ void OculusWorldDemoApp::Render(const StereoEyeParams& stereo)
 
     Texture* tex = pRender->CreateTexture(Texture_RGBA, lastFrame->width, lastFrame->height, imageData, 1);
     ShaderFill* image = (ShaderFill*)pRender->CreateTextureFill(tex, false);
-    pRender->RenderImage(-pictureSize, -pictureSize, pictureSize, pictureSize, image, 255);
+
+    // Left, top, right, bottom, image, alpha
+    pRender->RenderImage(pictureSize, pictureSize, -pictureSize, -pictureSize, image, 255);
 
 	delete image;
 	delete tex;
