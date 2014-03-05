@@ -177,10 +177,10 @@ protected:
         MessageType     Action;
 
         DeviceStatusNotificationDesc():Action(Message_None) {}
-        DeviceStatusNotificationDesc(MessageType mt, const DeviceHandle& dev) 
+        DeviceStatusNotificationDesc(MessageType mt, const DeviceHandle& dev)
             : Handle(dev), Action(mt) {}
     };
-    Array<DeviceStatusNotificationDesc> DeviceStatusNotificationsQueue; 
+    Array<DeviceStatusNotificationDesc> DeviceStatusNotificationsQueue;
 
     void CycleDisplay();
 };
@@ -217,7 +217,7 @@ OculusWorldDemoApp::OculusWorldDemoApp()
 OculusWorldDemoApp::~OculusWorldDemoApp()
 {
     pHMD.Clear();
-    
+
 }
 
 int OculusWorldDemoApp::OnStartup(int argc, const char** argv)
@@ -230,7 +230,7 @@ int OculusWorldDemoApp::OnStartup(int argc, const char** argv)
     // correct device.
 
     pManager = *DeviceManager::Create();
-    
+
     pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
     if (pHMD)
     {
@@ -246,7 +246,7 @@ int OculusWorldDemoApp::OnStartup(int argc, const char** argv)
             SConfig.SetHMDInfo(TheHMDInfo);
         }
 
-        // Retrieve relevant profile settings. 
+        // Retrieve relevant profile settings.
     }
     else
     {
@@ -255,7 +255,7 @@ int OculusWorldDemoApp::OnStartup(int argc, const char** argv)
         // a shipping app.
         pSensor = *pManager->EnumerateDevices<SensorDevice>().CreateDevice();
     }
-        
+
     // Make the user aware which devices are present.
     if(pHMD == NULL && pSensor == NULL)
     {
@@ -331,16 +331,16 @@ int OculusWorldDemoApp::OnStartup(int argc, const char** argv)
     if (TheHMDInfo.HScreenSize > 0.0f)
     {
         if (TheHMDInfo.HScreenSize > 0.140f)  // 7"
-            SConfig.SetDistortionFitPointVP(-1.0f, 0.0f);        
-        else        
-            SConfig.SetDistortionFitPointVP(0.0f, 1.0f);        
+            SConfig.SetDistortionFitPointVP(-1.0f, 0.0f);
+        else
+            SConfig.SetDistortionFitPointVP(0.0f, 1.0f);
     }
 
     pRender->SetSceneRenderScale(SConfig.GetDistortionScale());
     //pRender->SetSceneRenderScale(1.0f);
 
     SConfig.Set2DAreaFov(DegreeToRad(85.0f));
-    
+
     return 0;
 }
 
@@ -365,7 +365,7 @@ void OculusWorldDemoApp::OnKey(OVR::KeyCode key, int chr, bool down, int modifie
             pPlatform->Exit(0);
         }
         break;
-  
+
     case Key_B:
         if (down)
         {
@@ -505,19 +505,19 @@ void OculusWorldDemoApp::OnKey(OVR::KeyCode key, int chr, bool down, int modifie
 
             if (shader == RenderDevice::PostProcessShader_Distortion)
             {
-                pRender->SetPostProcessShader(RenderDevice::PostProcessShader_DistortionAndChromAb);                
+                pRender->SetPostProcessShader(RenderDevice::PostProcessShader_DistortionAndChromAb);
                 SetAdjustMessage("Chromatic Aberration Correction On");
             }
             else if (shader == RenderDevice::PostProcessShader_DistortionAndChromAb)
             {
-                pRender->SetPostProcessShader(RenderDevice::PostProcessShader_Distortion);                
+                pRender->SetPostProcessShader(RenderDevice::PostProcessShader_Distortion);
                 SetAdjustMessage("Chromatic Aberration Correction Off");
             }
             else
                 OVR_ASSERT(false);
         }
         break;
-	
+
      case Key_F9:
 #ifndef OVR_OS_LINUX    // On Linux F9 does the same as F11.
         if (!down)
@@ -537,7 +537,7 @@ void OculusWorldDemoApp::OnKey(OVR::KeyCode key, int chr, bool down, int modifie
             RenderParams.Display = DisplayId(SConfig.GetHMDInfo().DisplayDeviceName,SConfig.GetHMDInfo().DisplayId);
             pRender->SetParams(RenderParams);
 
-            pPlatform->SetMouseMode(Mouse_Normal);            
+            pPlatform->SetMouseMode(Mouse_Normal);
             pPlatform->SetFullscreen(RenderParams, pRender->IsFullscreen() ? Display_Window : Display_FakeFullscreen);
             pPlatform->SetMouseMode(Mouse_Relative); // Avoid mode world rotation jump.
             // If using an HMD, enable post-process (for distortion) and stereo.
@@ -567,7 +567,7 @@ void OculusWorldDemoApp::OnIdle()
         LoadingState = LoadingState_Finished;
         return;
     }
-    
+
     // If one of Stereo setting adjustment keys is pressed, adjust related state.
     if (pAdjustFunc)
     {
@@ -672,7 +672,7 @@ void OculusWorldDemoApp::Render(const StereoEyeParams& stereo)
     pRender->BeginScene(PostProcess);
 
     // *** 3D - Configures Viewport/Projection and Render
-    pRender->ApplyStereoParams(stereo);    
+    pRender->ApplyStereoParams(stereo);
     pRender->Clear();
 
     pRender->SetDepthMode(true, true);
@@ -683,11 +683,11 @@ void OculusWorldDemoApp::Render(const StereoEyeParams& stereo)
 
     // Render UI in 2D orthographic coordinate system that maps [-1,1] range
     // to a readable FOV area centered at your eye and properly adjusted.
-    pRender->ApplyStereoParams2D(stereo);    
+    pRender->ApplyStereoParams2D(stereo);
     pRender->SetDepthMode(false, false);
 
     float unitPixel = SConfig.Get2DUnitPixel();
-    float textHeight= unitPixel * 22; 
+    float textHeight= unitPixel * 22;
 
     // Display Loading screen-shot in frame 0.
     if (LoadingState != LoadingState_Finished)
@@ -730,7 +730,7 @@ void OculusWorldDemoApp::Render(const StereoEyeParams& stereo)
     case Text_Config:
     {
         char   textBuff[2048];
-         
+
         OVR_sprintf(textBuff, sizeof(textBuff),
                     "Fov\t300 %9.4f\n"
                     "EyeDistance\t300 %9.4f\n"
@@ -750,7 +750,7 @@ void OculusWorldDemoApp::Render(const StereoEyeParams& stereo)
             DrawTextBox(pRender, 0.0f, 0.0f, textHeight, textBuff, DrawText_Center);
     }
     break;
-            
+
     default:
         break;
     }
@@ -842,20 +842,20 @@ void OculusWorldDemoApp::CycleDisplay()
     }
     else
     {
-        // Try to find HMD Screen, making it the first screen in full-screen Cycle.        
+        // Try to find HMD Screen, making it the first screen in full-screen Cycle.
         FirstScreenInCycle = 0;
 
         if (pHMD)
         {
             DisplayId HMD (SConfig.GetHMDInfo().DisplayDeviceName, SConfig.GetHMDInfo().DisplayId);
             for (int i = 0; i< screenCount; i++)
-            {   
+            {
                 if (pPlatform->GetDisplay(i) == HMD)
                 {
                     FirstScreenInCycle = i;
                     break;
                 }
-            }            
+            }
         }
 
         // Switch full-screen on the HMD.
