@@ -7,7 +7,6 @@ Much creds to all previous authors.
 From the README of previous repository:
 
 To build this crap you need some libs:
-{{{
 - GL
 - OpenCV
 - X11
@@ -15,7 +14,6 @@ To build this crap you need some libs:
 - udev
 - ovr (included)
 - pthread
-}}}
 
 then go into the fpv directory and just type "make"
 
