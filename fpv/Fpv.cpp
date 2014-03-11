@@ -31,8 +31,11 @@ limitations under the License.
 #include "../CommonSrc/Render/Render_FontEmbed_DejaVu48.h"
 #include "../CommonSrc/Platform/Gamepad.h"
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+#include <opencv2/core/core.hpp>
+#include "opencv2/opencv.hpp"
+#include "opencv2/gpu/gpu.hpp"
+
+#include "../../cam-share/Read.cpp"
 
 using namespace OVR;
 using namespace OVR::Platform;
@@ -79,6 +82,8 @@ public:
     void         AdjustDistortionK3(float dt)  { AdjustDistortion(dt, 3, "K3"); }
 
 protected:
+    Read*               pRead;
+
     RenderDevice*       pRender;
     RendererParams      RenderParams;
     int                 Width, Height;
@@ -101,8 +106,7 @@ protected:
     double              NextFPSUpdate;
 
 	// FPV
-	CvCapture* capture;
-	IplImage * lastFrame;
+	cv::Mat* lastFrame = new cv::Mat();
 
     // Loading process displays screenshot in first frame
     // and then proceeds to load until finished.
@@ -340,6 +344,9 @@ int OculusWorldDemoApp::OnStartup(int argc, const char** argv)
     //pRender->SetSceneRenderScale(1.0f);
 
     SConfig.Set2DAreaFov(DegreeToRad(85.0f));
+
+    // Setup frame reader from shared memory
+    pRead = new Read("../../cam-share/caminfo.log");
 
     return 0;
 }
@@ -647,21 +654,14 @@ static void DrawTextBox(RenderDevice* prender, float x, float y,
 }
 
 void OculusWorldDemoApp::GrabFrame() {
-	// if not capturing init the capture!
-	if(!capture) {
-		capture = cvCaptureFromCAM( CV_CAP_ANY );
-		if ( !capture ) {
-		     fprintf( stderr, "ERROR: capture is NULL \n" );
-		     getchar();
-		}
-	}
+    pRead->frame.copyTo(*lastFrame);
+    cv::flip(*lastFrame, *lastFrame, 1);
 
-	lastFrame = cvQueryFrame( capture );
-    cvFlip(lastFrame, NULL, 1);
-
-	if ( !lastFrame ) {
+        
+	if ( lastFrame->empty() ) {
 		fprintf( stderr, "ERROR: frame is null...\n" );
 	}
+
 }
 
 void OculusWorldDemoApp::Render(const StereoEyeParams& stereo)
@@ -698,19 +698,19 @@ void OculusWorldDemoApp::Render(const StereoEyeParams& stereo)
         LoadingState = LoadingState_DoLoad;
     }
 
-
-	char * imageData = (char *)malloc(lastFrame->width * lastFrame->height * 4);
+    cv::Size size = lastFrame->size();
+	char * imageData = (char *)malloc(size.width * size.height * 4);
 
 	int pointer = 0;
 	int c = 0;
-	while(c < lastFrame->width * lastFrame->height * 3) {
-		imageData[pointer++] = lastFrame->imageData[(c++)+2];
-		imageData[pointer++] = lastFrame->imageData[c++];
-		imageData[pointer++] = lastFrame->imageData[(c++)-2];
+	while(c < size.width * size.height * 3) {
+		imageData[pointer++] = lastFrame->data[(c++)+2];
+		imageData[pointer++] = lastFrame->data[c++];
+		imageData[pointer++] = lastFrame->data[(c++)-2];
 		imageData[pointer++] = 0xFF;
 	}
 
-    Texture* tex = pRender->CreateTexture(Texture_RGBA, lastFrame->width, lastFrame->height, imageData, 1);
+    Texture* tex = pRender->CreateTexture(Texture_RGBA, size.width, size.height, imageData, 1);
     ShaderFill* image = (ShaderFill*)pRender->CreateTextureFill(tex, false);
 
     // Left, top, right, bottom, image, alpha

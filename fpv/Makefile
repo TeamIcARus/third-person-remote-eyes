@@ -5,17 +5,17 @@
 # Created     : 2013
 # Authors     : Simon Hallam and Peter Giokaris
 # Copyright   : Copyright 2013 OculusVR, Inc. All Rights Reserved
-# Instruction : The g++ compiler and stdndard lib packages need to be 
-#               installed on the system.  Navigate in a shell to the 
+# Instruction : The g++ compiler and stdndard lib packages need to be
+#               installed on the system.  Navigate in a shell to the
 #               directory where this Makefile is located and enter:
 #
-#               make                builds the release version for the 
+#               make                builds the release version for the
 #                                   current architechture
-#               make clean          delete intermediate release object files 
+#               make clean          delete intermediate release object files
 #                                   and the executabe file
 #               make DEBUG=1        builds the debug version for the current
 #                                   architechture
-#               make clean DEBUG=1  deletes intermediate debug object files 
+#               make clean DEBUG=1  deletes intermediate debug object files
 #                                   and the executable file
 #
 # Output      : Relative to the directory this Makefile lives in, executable
@@ -49,7 +49,7 @@ DEFINES       = -DQT_WEBKIT -DGL_GLEXT_PROTOTYPES
 DEBUG         = 0
 ifeq ($(DEBUG), 1)
 	CXXFLAGS      = -pipe -DDEBUG -g $(DEFINES)
-	LFLAGS        = 
+	LFLAGS        =
 	RELEASETYPE   = Debug
 else
 	CXXFLAGS      = -pipe -O2 $(DEFINES)
@@ -110,22 +110,22 @@ $(TARGET):  $(LIBOVRPATH)/Lib/Linux/$(RELEASETYPE)/$(SYSARCH)/libovr.a
 $(TARGET):  $(OBJECTS)
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 
-$(OBJPATH)/Fpv.o: Fpv.cpp 
+$(OBJPATH)/Fpv.o: Fpv.cpp
 	$(CXX_BUILD)Fpv.o Fpv.cpp
 
-$(OBJPATH)/Platform.o: ../CommonSrc/Platform/Platform.cpp 
+$(OBJPATH)/Platform.o: ../CommonSrc/Platform/Platform.cpp
 	$(CXX_BUILD)Platform.o ../CommonSrc/Platform/Platform.cpp
 
-$(OBJPATH)/Linux_Platform.o: ../CommonSrc/Platform/Linux_Platform.cpp 
+$(OBJPATH)/Linux_Platform.o: ../CommonSrc/Platform/Linux_Platform.cpp
 	$(CXX_BUILD)Linux_Platform.o ../CommonSrc/Platform/Linux_Platform.cpp
 
-$(OBJPATH)/Linux_Gamepad.o: ../CommonSrc/Platform/Linux_Gamepad.cpp 
+$(OBJPATH)/Linux_Gamepad.o: ../CommonSrc/Platform/Linux_Gamepad.cpp
 	$(CXX_BUILD)Linux_Gamepad.o ../CommonSrc/Platform/Linux_Gamepad.cpp
 
 $(OBJPATH)/Render_Device.o: ../CommonSrc/Render/Render_Device.cpp $
 	$(CXX_BUILD)Render_Device.o ../CommonSrc/Render/Render_Device.cpp
 
-$(OBJPATH)/Render_GL_Device.o: ../CommonSrc/Render/Render_GL_Device.cpp 
+$(OBJPATH)/Render_GL_Device.o: ../CommonSrc/Render/Render_GL_Device.cpp
 	$(CXX_BUILD)Render_GL_Device.o ../CommonSrc/Render/Render_GL_Device.cpp
 
 clean:
