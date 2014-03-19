@@ -62,7 +62,8 @@ endif
 LIBOVRPATH    = ../LibOVR
 COMMONSRCPATH = ../CommonSrc
 3RDPARTYPATH  = ../../3rdParty
-INCPATH       = -I. -I.. -I$(COMMONSRCPATH) -I$(LIBOVRPATH)/Include -I$(LIBOVRPATH)/Src
+INCPATH       = -I. -I.. -I$(COMMONSRCPATH) -I$(LIBOVRPATH)/Include -I$(LIBOVRPATH)/Src \
+				-I../../cam-share
 #OBJPATH       = ./Obj/Linux/$(RELEASETYPE)/$(SYSARCH)
 OBJPATH		= ./
 CXX_BUILD     = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJPATH)/
