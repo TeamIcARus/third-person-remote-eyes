@@ -346,7 +346,7 @@ int OculusWorldDemoApp::OnStartup(int argc, const char** argv)
     SConfig.Set2DAreaFov(DegreeToRad(85.0f));
 
     // Setup frame reader from shared memory
-    pRead = new Read("../../cam-share/caminfo.log");
+    pRead = new Read("caminfo.log");
 
     return 0;
 }
