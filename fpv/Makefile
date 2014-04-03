@@ -98,6 +98,7 @@ OBJECTS       = $(OBJPATH)/Fpv.o \
 		$(OBJPATH)/Linux_Gamepad.o \
 		$(OBJPATH)/Render_Device.o \
 		$(OBJPATH)/Render_GL_Device.o \
+		$(OBJPATH)/Read.o \
 
 TARGET        = ./FPV_$(SYSARCH)_$(RELEASETYPE)
 
@@ -113,6 +114,9 @@ $(TARGET):  $(OBJECTS)
 
 $(OBJPATH)/Fpv.o: Fpv.cpp
 	$(CXX_BUILD)Fpv.o Fpv.cpp
+
+$(OBJPATH)/Read.o: ../../cam-share/Read_unix.cpp
+	$(CXX_BUILD)Read.o ../../cam-share/Read_unix.cpp
 
 $(OBJPATH)/Platform.o: ../CommonSrc/Platform/Platform.cpp
 	$(CXX_BUILD)Platform.o ../CommonSrc/Platform/Platform.cpp

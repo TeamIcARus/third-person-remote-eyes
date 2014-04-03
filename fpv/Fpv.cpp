@@ -35,7 +35,11 @@ limitations under the License.
 #include "opencv2/opencv.hpp"
 #include "opencv2/gpu/gpu.hpp"
 
-#include "../../cam-share/Read.cpp"
+#ifdef _WIN32
+#include "../cam-share/Read_windows.h"
+#else
+#include "../cam-share/Read_unix.h"
+#endif
 
 using namespace OVR;
 using namespace OVR::Platform;
@@ -654,7 +658,7 @@ static void DrawTextBox(RenderDevice* prender, float x, float y,
 }
 
 void OculusWorldDemoApp::GrabFrame() {
-    pRead->frame.copyTo(*lastFrame);
+    pRead->getFrame().copyTo(*lastFrame);
     cv::flip(*lastFrame, *lastFrame, 1);
 
         
